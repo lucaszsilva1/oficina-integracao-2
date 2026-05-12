@@ -308,7 +308,7 @@ export class ValidationError extends AppError {
 
 export class UnauthorizedError extends AppError {
   constructor() {
-    super("Não autorizado", 401);
+    super('Não autorizado', 401);
   }
 }
 
@@ -340,13 +340,10 @@ try {
   return Response.json(result, { status: 201 });
 } catch (error) {
   if (error instanceof AppError) {
-    return Response.json(
-      { error: error.message },
-      { status: error.statusCode },
-    );
+    return Response.json({ error: error.message }, { status: error.statusCode });
   }
-  console.error("[INTERNAL ERROR]", error); // log apenas no servidor
-  return Response.json({ error: "Erro interno" }, { status: 500 });
+  console.error('[INTERNAL ERROR]', error); // log apenas no servidor
+  return Response.json({ error: 'Erro interno' }, { status: 500 });
 }
 ```
 
@@ -377,10 +374,10 @@ Service             → recebe usuário autenticado como parâmetro explícito
 const session = await getServerSession(authOptions);
 
 if (!session) {
-  return Response.json({ error: "Não autenticado" }, { status: 401 });
+  return Response.json({ error: 'Não autenticado' }, { status: 401 });
 }
-if (!["PROFESSOR", "ADMIN"].includes(session.user.role)) {
-  return Response.json({ error: "Não autorizado" }, { status: 403 });
+if (!['PROFESSOR', 'ADMIN'].includes(session.user.role)) {
+  return Response.json({ error: 'Não autorizado' }, { status: 403 });
 }
 
 const result = await workshopService.create(parsed.data, session.user);
@@ -604,7 +601,7 @@ chore(deps): add zod for input validation
 
 ```ts
 // No topo do arquivo de teste
-jest.mock("../../../src/lib/prisma", () => ({
+jest.mock('../../../src/lib/prisma', () => ({
   workshop: {
     create: jest.fn(),
     findMany: jest.fn(),
@@ -680,6 +677,7 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
 | 2026-05-12 | Erros de domínio com classes explícitas           | Evita erros crus do Prisma na API                      |
 | 2026-05-12 | Banco separado para testes                        | Evita contaminação entre dev e testes                  |
 | 2026-05-12 | Schemas Zod por módulo                            | Evita validação duplicada e centralizada               |
+| 2026-05-12 | Migração de Jest para Vitest                      | Melhor performance, suporte ESM nativo e DX superior   |
 
 ---
 
@@ -687,7 +685,15 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
 
 > Preencher ao longo do projeto. Cada hurdle descoberto vale um registro aqui.
 
-- [ ] _nenhum registrado ainda_
+- [x] gh CLI não está instalado. Criar o PR via MCP GitHub.
+- [x] next.config.ts não suportado no Next.js 14
+  - Solução: renomear para next.config.mjs.
+- [x] ts-node ausente para jest.config.ts
+  - Solução: Irrelevante após migração para Vitest.
+- [x] Crash 0xC0000005 no build (Windows)
+  - Sintoma: `Next.js build worker exited with code: 3221226505`.
+  - Causa: Problema de concorrência nos workers do Next.js 14 no Windows.
+  - Solução: Adicionado `experimental: { webpackBuildWorker: false }` no `next.config.mjs`.
 
 ---
 

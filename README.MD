@@ -1,6 +1,23 @@
 # Controle de Oficinas — ELLP / UTFPR
 
-Sistema web para gerenciamento de oficinas do projeto de extensão ELLP (Ensino Lúdico de Lógica e Programação) da UTFPR — Campus Cornélio Procópio.
+Sistema web para gerenciamento de oficinas do projeto de extensão ELLP (Ensino Lúdico de
+Lógica e Programação) da UTFPR — Campus Cornélio Procópio.
+
+---
+
+## Stack Tecnológica
+
+| Camada         | Tecnologia                      |
+| -------------- | ------------------------------- |
+| Front-end      | React via Next.js 14 App Router |
+| Back-end       | Next.js API Routes              |
+| Linguagem      | TypeScript 5                    |
+| ORM            | Prisma 5                        |
+| Banco de dados | PostgreSQL 15                   |
+| Testes         | Vitest + Testing Library        |
+| Validação      | Zod                             |
+| Autenticação   | NextAuth.js v5                  |
+| CI/CD          | GitHub Actions                  |
 
 ---
 
@@ -59,9 +76,11 @@ npm run dev
 npm run build
 
 # Testes
-npm test
+npx vitest run
+npx vitest run --coverage
+
+# Modo watch
 npm run test:watch
-npm run test:coverage
 
 # Lint e formatação
 npm run lint
@@ -70,6 +89,38 @@ npm run format
 
 ---
 
+## Estrutura de Pastas
+
+```
+oficina-integracao-2/
+├── .github/workflows/      ← CI com GitHub Actions
+├── prisma/                 ← schema, migrations e seed
+├── src/
+│   ├── app/                ← rotas Next.js (App Router)
+│   │   ├── (auth)/         ← login
+│   │   ├── dashboard/
+│   │   ├── workshops/
+│   │   ├── themes/
+│   │   ├── students/
+│   │   └── api/            ← API Routes (back-end)
+│   ├── modules/            ← lógica de negócio por domínio
+│   │   ├── workshops/
+│   │   ├── themes/
+│   │   ├── students/
+│   │   ├── attendance/
+│   │   └── certificates/
+│   ├── lib/                ← prisma, auth, errors
+│   └── components/         ← componentes React reutilizáveis
+└── tests/
+    ├── unit/               ← services e repositories com mocks
+    └── integration/        ← API Routes com banco real
+```
+
+---
+
 ## Arquitetura
 
-Documentada em `CLAUDE.md` — inclui decisões de stack, estrutura de pastas, regras de camadas, estratégia de testes e convenções de código.
+Documentada em `CLAUDE.md` — inclui decisões de stack, estrutura de pastas, regras de
+camadas, estratégia de testes e convenções de código.
+
+<!-- TODO: adicionar link para diagrama de arquitetura quando disponível -->
