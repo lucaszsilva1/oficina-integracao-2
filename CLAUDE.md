@@ -694,6 +694,9 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
   - Sintoma: `Next.js build worker exited with code: 3221226505`.
   - Causa: Problema de concorrência nos workers do Next.js 14 no Windows.
   - Solução: Adicionado `experimental: { webpackBuildWorker: false }` no `next.config.mjs`.
+- [x] actions/checkout e actions/setup-node precisam ser v5+.
+  - v4 usa Node.js 20 internamente e será removido em junho/2026.
+  - Solução: usar actions/checkout@v5 e actions/setup-node@v5.
 
 ---
 
