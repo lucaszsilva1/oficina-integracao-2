@@ -641,7 +641,7 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
 
 | Issue | Título                                  | Status |
 | ----- | --------------------------------------- | ------ |
-| #1    | Configurar estrutura inicial do projeto | ⬜     |
+| #1    | Configurar estrutura inicial do projeto | ✅     |
 | #2    | Configurar CI com GitHub Actions        | ✅     |
 | #3    | Criar schema do banco de dados          | ⬜     |
 | #4    | Autenticação — login e sessão           | ⬜     |

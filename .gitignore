@@ -3,6 +3,8 @@
 .env.local
 .env.*.local
 .mcp.json
+.claude/
+docs/
 
 # Dependencies
 node_modules/
