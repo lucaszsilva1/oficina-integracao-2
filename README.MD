@@ -1,5 +1,7 @@
 # Controle de Oficinas — ELLP / UTFPR
 
+![CI](https://github.com/lucaszsilva1/oficina-integracao-2/actions/workflows/ci.yml/badge.svg)
+
 Sistema web para gerenciamento de oficinas do projeto de extensão ELLP (Ensino Lúdico de
 Lógica e Programação) da UTFPR — Campus Cornélio Procópio.
 
