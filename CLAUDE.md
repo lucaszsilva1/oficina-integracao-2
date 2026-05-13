@@ -700,6 +700,9 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
 - [x] `ts-node` ausente para rodar seed TypeScript
   - Causa: projeto usa Vitest, nunca instalou ts-node.
   - Solução: instalar `tsx` como devDependency; configurar `"prisma.seed": "tsx prisma/seed.ts"` no `package.json`.
+- [x] actions/checkout e actions/setup-node precisam ser v5+.
+  - v4 usa Node.js 20 internamente e será removido em junho/2026.
+  - Solução: usar actions/checkout@v5 e actions/setup-node@v5.
 
 ---
 
