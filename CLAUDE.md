@@ -38,7 +38,8 @@ arquitetura respeitada, issues fechadas com commits rastreáveis, demonstrável 
 | Validação      | Zod                            | latest      |
 | Lint           | ESLint + Prettier              | latest      |
 | CI/CD          | GitHub Actions                 | —           |
-| Autenticação   | NextAuth.js                    | v5          |
+| Autenticação   | jose (JWT manual)              | latest      |
+| Hashing        | bcryptjs                       | latest      |
 
 ---
 
@@ -611,6 +612,18 @@ jest.mock('../../../src/lib/prisma', () => ({
 }));
 ```
 
+### Mock padrão para testes de API Route com autenticação
+
+```ts
+vi.mock('@/lib/auth', () => ({
+  verifyToken: vi.fn().mockResolvedValue({
+    id: 'test-id',
+    email: 'professor@ellp.dev',
+    role: 'PROFESSOR',
+  }),
+}))
+```
+
 ### Cobertura mínima esperada
 
 - Services: 85%+
@@ -644,7 +657,7 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
 | #1    | Configurar estrutura inicial do projeto | ✅     |
 | #2    | Configurar CI com GitHub Actions        | ✅     |
 | #3    | Criar schema do banco de dados          | ✅     |
-| #4    | Autenticação — login e sessão           | ⬜     |
+| #4    | Autenticação — login e sessão           | ✅     |
 | #5    | CRUD de Temas de Oficina                | ⬜     |
 | #6    | CRUD de Oficinas                        | ⬜     |
 | #7    | CRUD de Alunos                          | ⬜     |
@@ -681,6 +694,7 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
 | 2026-05-13 | Relação Workshop-Tutor implícita no Sprint 1      | Sem dados extras no vínculo; simplifica o schema       |
 | 2026-05-13 | Certificate.number sequencial global              | Mais simples; único entre todos os certificados        |
 | 2026-05-13 | Student: name e school obrigatórios, age opcional | Idade pode não ser coletada em campo                   |
+| 2026-05-13 | JWT manual com jose no lugar de NextAuth          | Menor configuração, melhor testabilidade, mais aprendizado real para iniciante solo |
 
 ---
 
@@ -703,6 +717,16 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
 - [x] actions/checkout e actions/setup-node precisam ser v5+.
   - v4 usa Node.js 20 internamente e será removido em junho/2026.
   - Solução: usar actions/checkout@v5 e actions/setup-node@v5.
+- [x] Vitest: ambiente padrão `jsdom` causa falha em testes de funções Node.js puras (jose, bcryptjs).
+  - Causa: `TextEncoder` do jsdom retorna `Uint8Array` de realm diferente; `instanceof Uint8Array` falha internamente no jose.
+  - Solução: alterar `environment: 'jsdom'` para `environment: 'node'` no `vitest.config.ts`.
+  - Regra: testes de componentes React que precisem de DOM usam `// @vitest-environment jsdom` por arquivo.
+- [x] `middleware.ts` deve ficar em `src/middleware.ts` quando o projeto usa `src/` directory.
+  - Colocar na raiz faz o Next.js ignorar silenciosamente o arquivo.
+- [x] Middleware roda em Edge Runtime — não suporta módulos Node.js.
+  - Causa: `bcryptjs` (via `@/lib/auth`) falha silenciosamente no Edge; `export const runtime = 'nodejs'` não é suportado em middleware no Next.js 14.
+  - Solução adotada (Opção C): middleware verifica só a existência do cookie `token`. Verificação completa do JWT acontece em cada API Route (Node.js).
+  - Próximo passo se precisar verificar JWT no middleware (Opção B): extrair `src/lib/jwt.ts` com funções `jose` apenas (Edge-safe) e separar de `auth.ts` que usa `bcryptjs`.
 
 ---
 
