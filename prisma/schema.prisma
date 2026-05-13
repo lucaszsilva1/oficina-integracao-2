@@ -7,4 +7,94 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Schema completo definido na Issue #3
+enum Role {
+  PROFESSOR
+  TUTOR
+  ADMIN
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role
+  createdAt DateTime @default(now())
+
+  workshops Workshop[] @relation("ProfessorWorkshops")
+  tutorFor  Workshop[] @relation("TutorWorkshops")
+
+  @@map("users")
+}
+
+model Theme {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+
+  workshops Workshop[]
+
+  @@map("themes")
+}
+
+model Workshop {
+  id          String   @id @default(cuid())
+  title       String
+  date        DateTime
+  location    String
+  themeId     String
+  professorId String
+  createdAt   DateTime @default(now())
+
+  theme       Theme        @relation(fields: [themeId], references: [id])
+  professor   User         @relation("ProfessorWorkshops", fields: [professorId], references: [id])
+  tutors      User[]       @relation("TutorWorkshops")
+  attendances Attendance[]
+
+  @@map("workshops")
+}
+
+model Student {
+  id        String   @id @default(cuid())
+  name      String
+  school    String
+  age       Int?
+  createdAt DateTime @default(now())
+
+  attendances Attendance[]
+
+  @@map("students")
+}
+
+model Attendance {
+  id         String           @id @default(cuid())
+  workshopId String
+  studentId  String
+  status     AttendanceStatus
+  createdAt  DateTime         @default(now())
+
+  workshop    Workshop     @relation(fields: [workshopId], references: [id])
+  student     Student      @relation(fields: [studentId], references: [id])
+  certificate Certificate?
+
+  @@unique([workshopId, studentId])
+  @@map("attendances")
+}
+
+model Certificate {
+  id           String   @id @default(cuid())
+  attendanceId String   @unique
+  number       Int      @unique @default(autoincrement())
+  issuedAt     DateTime @default(now())
+
+  attendance Attendance @relation(fields: [attendanceId], references: [id])
+
+  @@map("certificates")
+}
