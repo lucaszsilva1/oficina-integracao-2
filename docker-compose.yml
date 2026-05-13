@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: ellp_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ellp
+      POSTGRES_PASSWORD: ellp
+      POSTGRES_DB: oficina_ellp
+    ports:
+      - "5432:5432"
+    volumes:
+      - ellp_postgres_data:/var/lib/postgresql/data
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ellp -d oficina_ellp"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  ellp_postgres_data:
