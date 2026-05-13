@@ -643,7 +643,7 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
 | ----- | --------------------------------------- | ------ |
 | #1    | Configurar estrutura inicial do projeto | ✅     |
 | #2    | Configurar CI com GitHub Actions        | ✅     |
-| #3    | Criar schema do banco de dados          | ⬜     |
+| #3    | Criar schema do banco de dados          | ✅     |
 | #4    | Autenticação — login e sessão           | ⬜     |
 | #5    | CRUD de Temas de Oficina                | ⬜     |
 | #6    | CRUD de Oficinas                        | ⬜     |
@@ -678,6 +678,9 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
 | 2026-05-12 | Banco separado para testes                        | Evita contaminação entre dev e testes                  |
 | 2026-05-12 | Schemas Zod por módulo                            | Evita validação duplicada e centralizada               |
 | 2026-05-12 | Migração de Jest para Vitest                      | Melhor performance, suporte ESM nativo e DX superior   |
+| 2026-05-13 | Relação Workshop-Tutor implícita no Sprint 1      | Sem dados extras no vínculo; simplifica o schema       |
+| 2026-05-13 | Certificate.number sequencial global              | Mais simples; único entre todos os certificados        |
+| 2026-05-13 | Student: name e school obrigatórios, age opcional | Idade pode não ser coletada em campo                   |
 
 ---
 
@@ -694,6 +697,9 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
   - Sintoma: `Next.js build worker exited with code: 3221226505`.
   - Causa: Problema de concorrência nos workers do Next.js 14 no Windows.
   - Solução: Adicionado `experimental: { webpackBuildWorker: false }` no `next.config.mjs`.
+- [x] `ts-node` ausente para rodar seed TypeScript
+  - Causa: projeto usa Vitest, nunca instalou ts-node.
+  - Solução: instalar `tsx` como devDependency; configurar `"prisma.seed": "tsx prisma/seed.ts"` no `package.json`.
 - [x] actions/checkout e actions/setup-node precisam ser v5+.
   - v4 usa Node.js 20 internamente e será removido em junho/2026.
   - Solução: usar actions/checkout@v5 e actions/setup-node@v5.
