@@ -658,7 +658,7 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
 | #2    | Configurar CI com GitHub Actions        | ✅     |
 | #3    | Criar schema do banco de dados          | ✅     |
 | #4    | Autenticação — login e sessão           | ✅     |
-| #5    | CRUD de Temas de Oficina                | ⬜     |
+| #5    | CRUD de Temas de Oficina                | ✅     |
 | #6    | CRUD de Oficinas                        | ⬜     |
 | #7    | CRUD de Alunos                          | ⬜     |
 | #8    | Registro de Presença                    | ⬜     |
@@ -695,6 +695,10 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
 | 2026-05-13 | Certificate.number sequencial global              | Mais simples; único entre todos os certificados        |
 | 2026-05-13 | Student: name e school obrigatórios, age opcional | Idade pode não ser coletada em campo                   |
 | 2026-05-13 | JWT manual com jose no lugar de NextAuth          | Menor configuração, melhor testabilidade, mais aprendizado real para iniciante solo |
+| 2026-05-15 | PROFESSOR cria oficina; ADMIN não cria             | Evita ambiguidade: `professorId` vem sempre do token JWT do criador              |
+| 2026-05-15 | Delete com cascade via Prisma `onDelete: Cascade`  | ADMIN deleta com cascade automático; PROFESSOR só deleta próprias sem attendances |
+| 2026-05-15 | Tutores de oficina fora do escopo do Sprint 1      | Relação N:N Workshop-Tutor entra em issue futura                                  |
+| 2026-05-15 | `ForbiddenError` adicionado a `src/lib/errors.ts`  | Necessário para separar 401 (não autenticado) de 403 (sem permissão)             |
 
 ---
 
@@ -723,6 +727,11 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
   - Regra: testes de componentes React que precisem de DOM usam `// @vitest-environment jsdom` por arquivo.
 - [x] `middleware.ts` deve ficar em `src/middleware.ts` quando o projeto usa `src/` directory.
   - Colocar na raiz faz o Next.js ignorar silenciosamente o arquivo.
+- [x] Server Component sem `cookies()` tenta pré-renderizar estaticamente no build.
+  - Sintoma: `Error occurred prerendering page "/workshops/new"` — Prisma falha sem banco no build.
+  - Causa: Next.js 14 pré-renderiza estaticamente páginas que não usam `cookies()`, `headers()` ou `searchParams`.
+  - Solução: adicionar `export const dynamic = 'force-dynamic'` na página que chama o banco mas não lê cookies.
+  - Regra: qualquer Server Component que acesse Prisma diretamente sem ler cookies precisa do export `dynamic`.
 - [x] Middleware roda em Edge Runtime — não suporta módulos Node.js.
   - Causa: `bcryptjs` (via `@/lib/auth`) falha silenciosamente no Edge; `export const runtime = 'nodejs'` não é suportado em middleware no Next.js 14.
   - Solução adotada (Opção C): middleware verifica só a existência do cookie `token`. Verificação completa do JWT acontece em cada API Route (Node.js).
