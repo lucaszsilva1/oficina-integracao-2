@@ -80,7 +80,7 @@ model Attendance {
   status     AttendanceStatus
   createdAt  DateTime         @default(now())
 
-  workshop    Workshop     @relation(fields: [workshopId], references: [id])
+  workshop    Workshop     @relation(fields: [workshopId], references: [id], onDelete: Cascade)
   student     Student      @relation(fields: [studentId], references: [id])
   certificate Certificate?
 
@@ -94,7 +94,7 @@ model Certificate {
   number       Int      @unique @default(autoincrement())
   issuedAt     DateTime @default(now())
 
-  attendance Attendance @relation(fields: [attendanceId], references: [id])
+  attendance Attendance @relation(fields: [attendanceId], references: [id], onDelete: Cascade)
 
   @@map("certificates")
 }
