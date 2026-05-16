@@ -91,7 +91,7 @@ model Attendance {
 model Certificate {
   id           String   @id @default(cuid())
   attendanceId String   @unique
-  number       Int      @unique @default(autoincrement())
+  number       String   @unique
   issuedAt     DateTime @default(now())
 
   attendance Attendance @relation(fields: [attendanceId], references: [id], onDelete: Cascade)
