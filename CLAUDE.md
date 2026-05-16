@@ -659,9 +659,9 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
 | #3    | Criar schema do banco de dados          | ✅     |
 | #4    | Autenticação — login e sessão           | ✅     |
 | #5    | CRUD de Temas de Oficina                | ✅     |
-| #6    | CRUD de Oficinas                        | ⬜     |
-| #7    | CRUD de Alunos                          | ⬜     |
-| #8    | Registro de Presença                    | ⬜     |
+| #6    | CRUD de Oficinas                        | ✅     |
+| #7    | CRUD de Alunos                          | ✅     |
+| #8    | Registro de Presença                    | ✅     |
 | #9    | Emissão de Certificado                  | ⬜     |
 | #10   | Documentar arquitetura no README        | ⬜     |
 
@@ -699,6 +699,10 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
 | 2026-05-15 | Delete com cascade via Prisma `onDelete: Cascade`  | ADMIN deleta com cascade automático; PROFESSOR só deleta próprias sem attendances |
 | 2026-05-15 | Tutores de oficina fora do escopo do Sprint 1      | Relação N:N Workshop-Tutor entra em issue futura                                  |
 | 2026-05-15 | `ForbiddenError` adicionado a `src/lib/errors.ts`  | Necessário para separar 401 (não autenticado) de 403 (sem permissão)             |
+| 2026-05-15 | Presença salva em bulk via `prisma.$transaction` com múltiplos `upsert` | Prisma não tem `upsertMany` nativo; transação garante atomicidade |
+| 2026-05-15 | Status padrão ABSENT ao adicionar aluno à lista | Professor marca manualmente quem foi PRESENT; evita registro acidental |
+| 2026-05-15 | `StudentSelector` busca via `/api/students?search=` ao invés de URL navigation | Componente de presença precisa de callback, não de navegação |
+| 2026-05-15 | Página `/workshops/[id]/attendance` usa `notFound()` para PROFESSOR não-dono | Impede acesso à UI sem revelar que a oficina existe |
 
 ---
 
