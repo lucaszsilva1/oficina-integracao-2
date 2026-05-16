@@ -64,7 +64,7 @@ model Workshop {
 model Student {
   id        String   @id @default(cuid())
   name      String
-  school    String
+  school    String?
   age       Int?
   createdAt DateTime @default(now())
 
@@ -81,7 +81,7 @@ model Attendance {
   createdAt  DateTime         @default(now())
 
   workshop    Workshop     @relation(fields: [workshopId], references: [id], onDelete: Cascade)
-  student     Student      @relation(fields: [studentId], references: [id])
+  student     Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
   certificate Certificate?
 
   @@unique([workshopId, studentId])
