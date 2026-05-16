@@ -662,7 +662,7 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
 | #6    | CRUD de Oficinas                        | ✅     |
 | #7    | CRUD de Alunos                          | ✅     |
 | #8    | Registro de Presença                    | ✅     |
-| #9    | Emissão de Certificado                  | ⬜     |
+| #9    | Emissão de Certificado                  | ✅     |
 | #10   | Documentar arquitetura no README        | ⬜     |
 
 ---
@@ -692,7 +692,7 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
 | 2026-05-12 | Schemas Zod por módulo                            | Evita validação duplicada e centralizada               |
 | 2026-05-12 | Migração de Jest para Vitest                      | Melhor performance, suporte ESM nativo e DX superior   |
 | 2026-05-13 | Relação Workshop-Tutor implícita no Sprint 1      | Sem dados extras no vínculo; simplifica o schema       |
-| 2026-05-13 | Certificate.number sequencial global              | Mais simples; único entre todos os certificados        |
+| 2026-05-16 | Certificate.number mudado de Int autoincrement para String UUID | Schema inicial usava autoincrement; UUID gerado pelo service via `crypto.randomUUID()` evita race condition e é testável via `vi.spyOn(crypto, 'randomUUID')` |
 | 2026-05-13 | Student: name e school obrigatórios, age opcional | Idade pode não ser coletada em campo                   |
 | 2026-05-13 | JWT manual com jose no lugar de NextAuth          | Menor configuração, melhor testabilidade, mais aprendizado real para iniciante solo |
 | 2026-05-15 | PROFESSOR cria oficina; ADMIN não cria             | Evita ambiguidade: `professorId` vem sempre do token JWT do criador              |
@@ -703,6 +703,10 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
 | 2026-05-15 | Status padrão ABSENT ao adicionar aluno à lista | Professor marca manualmente quem foi PRESENT; evita registro acidental |
 | 2026-05-15 | `StudentSelector` busca via `/api/students?search=` ao invés de URL navigation | Componente de presença precisa de callback, não de navegação |
 | 2026-05-15 | Página `/workshops/[id]/attendance` usa `notFound()` para PROFESSOR não-dono | Impede acesso à UI sem revelar que a oficina existe |
+| 2026-05-16 | Página `/workshops/[id]/certificates` separada da de presença | Separação de responsabilidades; AttendanceManager do #8 não é alterado |
+| 2026-05-16 | Emissão individual por botão (POST por certificado, sem bulk) | Sprint 1 não exige bulk; simplifica lógica e UX |
+| 2026-05-16 | TUTOR não pode emitir certificado (ForbiddenError no service) | Regra de permissão da tabela §5 do CLAUDE.md |
+| 2026-05-16 | Apenas ADMIN pode deletar certificado | Evita exclusão acidental; PROFESSOR não tem esse poder |
 
 ---
 
