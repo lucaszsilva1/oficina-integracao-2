@@ -14,7 +14,7 @@ vi.mock('@/lib/prisma', () => ({
     theme: {
       findUnique: vi.fn(),
     },
-    attendance: {
+    certificate: {
       count: vi.fn(),
     },
   },
@@ -33,7 +33,7 @@ const mockPrisma = prisma as unknown as {
   theme: {
     findUnique: ReturnType<typeof vi.fn>
   }
-  attendance: {
+  certificate: {
     count: ReturnType<typeof vi.fn>
   }
 }
@@ -205,7 +205,7 @@ describe('deleteWorkshop — ADMIN', () => {
     await deleteWorkshop('ws-1', adminPayload)
 
     expect(mockPrisma.workshop.delete).toHaveBeenCalledWith({ where: { id: 'ws-1' } })
-    expect(mockPrisma.attendance.count).not.toHaveBeenCalled()
+    expect(mockPrisma.certificate.count).not.toHaveBeenCalled()
   })
 
   it('exclui workshop sem attendances', async () => {
@@ -232,7 +232,18 @@ describe('deleteWorkshop — PROFESSOR', () => {
   it('exclui workshop próprio sem attendances', async () => {
     const existing = makeWorkshop({ professorId: 'user-1' })
     mockPrisma.workshop.findUnique.mockResolvedValue(existing)
-    mockPrisma.attendance.count.mockResolvedValue(0)
+    mockPrisma.certificate.count.mockResolvedValue(0)
+    mockPrisma.workshop.delete.mockResolvedValue(existing)
+
+    await deleteWorkshop('ws-1', professorPayload)
+
+    expect(mockPrisma.workshop.delete).toHaveBeenCalledWith({ where: { id: 'ws-1' } })
+  })
+
+  it('exclui workshop próprio com attendances mas sem certificados', async () => {
+    const existing = makeWorkshop({ professorId: 'user-1' })
+    mockPrisma.workshop.findUnique.mockResolvedValue(existing)
+    mockPrisma.certificate.count.mockResolvedValue(0)
     mockPrisma.workshop.delete.mockResolvedValue(existing)
 
     await deleteWorkshop('ws-1', professorPayload)
@@ -248,10 +259,10 @@ describe('deleteWorkshop — PROFESSOR', () => {
     expect(mockPrisma.workshop.delete).not.toHaveBeenCalled()
   })
 
-  it('lança ConflictError se workshop tem attendances', async () => {
+  it('lança ConflictError se workshop tem certificados emitidos', async () => {
     const existing = makeWorkshop({ professorId: 'user-1' })
     mockPrisma.workshop.findUnique.mockResolvedValue(existing)
-    mockPrisma.attendance.count.mockResolvedValue(3)
+    mockPrisma.certificate.count.mockResolvedValue(2)
 
     await expect(deleteWorkshop('ws-1', professorPayload)).rejects.toThrow(ConflictError)
     expect(mockPrisma.workshop.delete).not.toHaveBeenCalled()

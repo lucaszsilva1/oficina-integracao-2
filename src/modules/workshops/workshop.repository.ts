@@ -24,8 +24,11 @@ export async function findThemeById(themeId: string) {
   return prisma.theme.findUnique({ where: { id: themeId } })
 }
 
-export async function countAttendances(workshopId: string) {
-  return prisma.attendance.count({ where: { workshopId } })
+export async function hasCertificates(workshopId: string): Promise<boolean> {
+  const count = await prisma.certificate.count({
+    where: { attendance: { workshopId } },
+  })
+  return count > 0
 }
 
 export async function createWorkshop(data: CreateWorkshopInput & { professorId: string }) {
