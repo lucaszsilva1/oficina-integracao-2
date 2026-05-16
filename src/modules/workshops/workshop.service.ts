@@ -3,7 +3,7 @@ import {
   findAll,
   findById,
   findThemeById,
-  countAttendances,
+  hasCertificates,
   createWorkshop as repoCreate,
   updateWorkshop as repoUpdate,
   deleteWorkshop as repoDelete,
@@ -59,9 +59,8 @@ export async function deleteWorkshop(id: string, caller: Caller) {
     throw new ForbiddenError('Você não tem permissão para excluir esta oficina')
   }
 
-  const attendanceCount = await countAttendances(id)
-  if (attendanceCount > 0) {
-    throw new ConflictError('Oficina possui alunos registrados')
+  if (await hasCertificates(id)) {
+    throw new ConflictError('Oficina possui certificados emitidos')
   }
 
   return repoDelete(id)
