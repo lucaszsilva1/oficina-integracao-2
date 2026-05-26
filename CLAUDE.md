@@ -663,7 +663,7 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
 | #7    | CRUD de Alunos                          | ✅     |
 | #8    | Registro de Presença                    | ✅     |
 | #9    | Emissão de Certificado                  | ✅     |
-| #10   | Documentar arquitetura no README        | ⬜     |
+| #10   | Documentar arquitetura no README        | ✅     |
 
 ---
 
