@@ -57,6 +57,7 @@ const makeWorkshop = (overrides = {}) => ({
   location: 'Sala 1',
   themeId: 'theme-1',
   professorId: 'prof-1',
+  totalClasses: 4,
   attendances: [],
   ...overrides,
 })
@@ -199,6 +200,33 @@ describe('saveAttendances — comportamento', () => {
     const transactionArg = mockPrisma.$transaction.mock.calls[0][0]
     expect(transactionArg).toHaveLength(3)
   })
+
+  it('deriva presentCount a partir do status (PRESENT = totalClasses, ABSENT = 0)', async () => {
+    const workshop = makeWorkshop({ totalClasses: 4 })
+    mockPrisma.workshop.findUnique.mockResolvedValue(workshop)
+    mockPrisma.$transaction.mockResolvedValue([])
+
+    await saveAttendances(
+      'workshop-1',
+      [
+        { studentId: 'student-1', status: 'PRESENT' },
+        { studentId: 'student-2', status: 'ABSENT' },
+      ],
+      tutorActor,
+    )
+
+    const presentUpsert = mockPrisma.attendance.upsert.mock.calls.find(
+      (c) => c[0].where.workshopId_studentId.studentId === 'student-1',
+    )?.[0]
+    const absentUpsert = mockPrisma.attendance.upsert.mock.calls.find(
+      (c) => c[0].where.workshopId_studentId.studentId === 'student-2',
+    )?.[0]
+
+    expect(presentUpsert.create).toMatchObject({ status: 'PRESENT', presentCount: 4 })
+    expect(presentUpsert.update).toMatchObject({ status: 'PRESENT', presentCount: 4 })
+    expect(absentUpsert.create).toMatchObject({ status: 'ABSENT', presentCount: 0 })
+    expect(absentUpsert.update).toMatchObject({ status: 'ABSENT', presentCount: 0 })
+  })
 })
 
 // ─── updateAttendance ─────────────────────────────────────────────────────────
@@ -214,7 +242,7 @@ describe('updateAttendance', () => {
     ).resolves.not.toThrow()
 
     expect(mockPrisma.attendance.update).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { id: 'att-1' }, data: { status: 'ABSENT' } }),
+      expect.objectContaining({ where: { id: 'att-1' }, data: { status: 'ABSENT', presentCount: 0 } }),
     )
   })
 
