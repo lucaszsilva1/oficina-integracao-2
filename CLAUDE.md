@@ -56,65 +56,43 @@ oficina-integracao-2/
 │   └── seed.ts                     ← dados iniciais para dev
 ├── src/
 │   ├── app/                        ← rotas Next.js (App Router)
-│   │   ├── (auth)/
-│   │   │   └── login/page.tsx
-│   │   ├── dashboard/page.tsx
-│   │   ├── workshops/
-│   │   │   ├── page.tsx            ← Server Component (listagem)
-│   │   │   └── [id]/page.tsx       ← Server Component (detalhe)
-│   │   ├── themes/page.tsx
-│   │   ├── students/page.tsx
-│   │   └── api/                    ← API Routes (back-end)
-│   │       ├── auth/[...nextauth]/route.ts
-│   │       ├── workshops/route.ts
-│   │       ├── themes/route.ts
-│   │       ├── students/route.ts
-│   │       ├── attendance/route.ts
-│   │       └── certificates/route.ts
+│   │   ├── (auth)/login/           ← página de login
+│   │   ├── workshops/              ← listagem, detalhe, presença, certificados
+│   │   ├── themes/                 ← listagem, criação, edição
+│   │   ├── students/                ← listagem, criação, edição
+│   │   └── api/                     ← API Routes (back-end)
+│   │       ├── auth/                ← login / logout
+│   │       ├── workshops/           ← CRUD + /[id]/attendances + /[id]/certificates
+│   │       ├── themes/              ← CRUD
+│   │       ├── students/            ← CRUD + busca
+│   │       ├── attendances/[id]/    ← PATCH status individual
+│   │       └── certificates/[id]/   ← DELETE (admin)
 │   ├── modules/                    ← lógica de negócio por domínio
 │   │   ├── workshops/
-│   │   │   ├── workshop.service.ts
-│   │   │   ├── workshop.repository.ts
-│   │   │   ├── workshop.schema.ts  ← schemas Zod do módulo
-│   │   │   └── workshop.types.ts
 │   │   ├── themes/
-│   │   │   ├── theme.service.ts
-│   │   │   ├── theme.repository.ts
-│   │   │   ├── theme.schema.ts
-│   │   │   └── theme.types.ts
 │   │   ├── students/
-│   │   │   ├── student.service.ts
-│   │   │   ├── student.repository.ts
-│   │   │   ├── student.schema.ts
-│   │   │   └── student.types.ts
-│   │   ├── attendance/
-│   │   │   ├── attendance.service.ts
-│   │   │   ├── attendance.repository.ts
-│   │   │   ├── attendance.schema.ts
-│   │   │   └── attendance.types.ts
+│   │   ├── attendances/
 │   │   └── certificates/
-│   │       ├── certificate.service.ts
-│   │       ├── certificate.repository.ts
-│   │       ├── certificate.schema.ts
-│   │       └── certificate.types.ts
 │   ├── lib/
 │   │   ├── prisma.ts               ← instância singleton do PrismaClient
-│   │   ├── auth.ts                 ← configuração NextAuth
-│   │   └── errors.ts               ← classes de erro de domínio
-│   └── components/                 ← componentes React reutilizáveis
-│       ├── ui/                     ← botões, inputs, cards genéricos
-│       └── layout/                 ← header, sidebar, nav
+│   │   ├── auth.ts                 ← signToken, verifyToken, hashPassword
+│   │   └── errors.ts               ← AppError, NotFoundError, ConflictError, ForbiddenError
+│   └── components/
+│       ├── attendances/            ← AttendanceManager, StudentSelector
+│       ├── certificates/           ← CertificateList, EmitCertificateButton
+│       ├── workshops/              ← WorkshopForm
+│       ├── students/                ← StudentForm, StudentSearch
+│       └── themes/                  ← ThemeForm
 ├── tests/
-│   ├── unit/                       ← testes de services e repositories
-│   │   ├── workshops/
-│   │   ├── themes/
-│   │   ├── students/
-│   │   ├── attendance/
-│   │   └── certificates/
-│   └── integration/                ← testes de API Routes com banco real
+│   └── unit/modules/               ← services com mocks do Prisma
+│       ├── workshops/
+│       ├── themes/
+│       ├── students/
+│       ├── attendances/
+│       └── certificates/
 ├── .env.example                    ← variáveis necessárias (sem valores reais)
-├── jest.config.ts
-├── next.config.ts
+├── vitest.config.ts
+├── next.config.mjs
 └── README.md
 ```
 
@@ -146,23 +124,25 @@ Attendance ──< Certificate
 
 - Um aluno não pode ter presença duplicada na mesma oficina
 - Certificado só pode ser emitido para presença com status PRESENT
+- Certificado só pode ser emitido para aluno com pelo menos 75% de presença na oficina
+  (`count(PRESENT) / totalClasses >= 0.75` — ver Sprint 2, §21)
 - Certificado não pode ser emitido duplicado para a mesma presença
 - Apenas PROFESSOR e ADMIN podem criar/editar oficinas e temas
 - TUTOR pode registrar presença
-- Número do certificado é sequencial e gerado pelo sistema
+- Número do certificado é um UUID gerado pelo sistema (`crypto.randomUUID()` — ver §22, decisão 2026-05-16)
 
 ---
 
 ## 5. Papéis e Permissões
 
-| Ação                 | ADMIN | PROFESSOR | TUTOR |
-| -------------------- | ----- | --------- | ----- |
-| Criar/editar tema    | ✅    | ✅        | ❌    |
-| Criar/editar oficina | ✅    | ✅        | ❌    |
-| Cadastrar aluno      | ✅    | ✅        | ✅    |
-| Registrar presença   | ✅    | ✅        | ✅    |
-| Emitir certificado   | ✅    | ✅        | ❌    |
-| Ver relatórios       | ✅    | ✅        | ❌    |
+| Ação                 | ADMIN | PROFESSOR dono | PROFESSOR outro | TUTOR |
+| -------------------- | ----- | --------------- | ---------------- | ----- |
+| Criar/editar tema    | ✅    | ✅              | ✅                | ❌    |
+| Criar/editar oficina | ✅    | ✅              | ❌                | ❌    |
+| Cadastrar aluno      | ✅    | ✅              | ✅                | ✅    |
+| Registrar presença   | ✅    | ✅              | ❌                | ✅    |
+| Emitir certificado   | ✅    | ✅              | ❌                | ❌    |
+| Excluir certificado  | ✅    | ❌              | ❌                | ❌    |
 
 ---
 
@@ -650,7 +630,7 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
 
 ---
 
-## 20. Backlog Sprint 1
+## 20. Backlog Sprint 1 — Concluído ✅ (10/10 issues)
 
 | Issue | Título                                  | Status |
 | ----- | --------------------------------------- | ------ |
@@ -667,13 +647,40 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
 
 ---
 
-## 21. Backlog Sprint 2 (planejamento inicial)
+## 21. Sprint 2 — Planejamento e Decisões de Escopo
 
-- Relatório de oficinas por período
-- Relatório de presença por aluno
-- Geração de certificado em PDF (stretch goal)
-- Ampliação de cobertura de testes
-- Ajustes apontados pelo professor no Sprint Review 1
+Alinhado com o professor na reunião de revisão do Sprint 1.
+
+### Decisões de escopo
+
+| # | Decisão | Opção escolhida |
+|---|---------|------------------|
+| 1 | Até 10 aulas por oficina; 75% de presença obrigatório para certificado | C — campo `totalClasses Int @default(1)` no `Workshop`; elegibilidade via helper puro `isEligibleForCertificate(presentCount, totalClasses)` |
+| 2 | Certificado sem PDF, página HTML imprimível | A — manter entidade `Certificate` persistida + rota pública `/certificates/[id]/print` (sem auth, sem layout global, `@media print`) |
+| 3 | Escopo do Sprint 2 | Foco exclusivo em controle de oficinas; levantamento socioeconômico, voluntários e escolas participantes ficam fora do escopo |
+| 4 | UX/UI | Estilização global entra na Fase 1 |
+| 5 | Deploy | Entra na Fase 2 |
+
+### Backlog
+
+| # | Issue | Depende de | Prioridade | Fase |
+|---|-------|-----------|------------|------|
+| #11 | Adicionar `totalClasses` no Workshop | — | 🔴 Alta | 1 |
+| #12 | Regra de 75% de presença — elegibilidade para certificado | #11 | 🔴 Alta | 1 |
+| #13 | Página HTML imprimível do certificado | #12 | 🔴 Alta | 1 |
+| #14 | UX/UI — estilização global das páginas | — | 🟡 Média | 1 |
+| #15 | Deploy | — | 🟡 Média | 2 |
+
+### Diferenciais (não obrigatórios)
+
+- Indicador de progresso de presença por aluno
+- Emissão de certificado em bulk
+- Botão de exclusão de certificado na UI para ADMIN
+- Extrair `src/lib/jwt.ts` Edge-safe
+
+### Questões em aberto
+
+- Número do certificado (UUID) — avaliar com o professor se deve migrar para sequência legível antes da página de impressão (issue #13)
 
 ---
 
@@ -707,6 +714,10 @@ Para cada funcionalidade nova, seguir esta ordem sem exceção:
 | 2026-05-16 | Emissão individual por botão (POST por certificado, sem bulk) | Sprint 1 não exige bulk; simplifica lógica e UX |
 | 2026-05-16 | TUTOR não pode emitir certificado (ForbiddenError no service) | Regra de permissão da tabela §5 do CLAUDE.md |
 | 2026-05-16 | Apenas ADMIN pode deletar certificado | Evita exclusão acidental; PROFESSOR não tem esse poder |
+| 2026-06-21 | `totalClasses Int @default(1)` no `Workshop` (Opção C) em vez de nova entidade `WorkshopClass` | Menor mudança, sem migration destrutiva nem refactor do `AttendanceManager`; perde granularidade de qual aula o aluno faltou, mas não é requisito do professor |
+| 2026-06-21 | Certificado imprimível mantém entidade `Certificate` persistida (Opção A) em vez de gerar on-the-fly | Preserva auditoria e os 15 testes existentes de `certificate.service.test.ts` |
+| 2026-06-21 | Rota `/certificates/[id]/print` sem autenticação — exceção consciente ao padrão de autorização (§10) | Link precisa ser enviável diretamente ao aluno, que não possui login no sistema |
+| 2026-06-21 | §4 corrigido: número do certificado é UUID, não sequencial | Alinha a documentação com a decisão já registrada em 2026-05-16; pendência sobre migrar para sequência legível fica em §21 |
 
 ---
 
