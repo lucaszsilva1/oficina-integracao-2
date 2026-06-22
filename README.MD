@@ -17,11 +17,11 @@ Alinhado com o professor após o Sprint Review 1.
 
 | # | Issue | Depende de | Prioridade | Fase |
 |---|-------|-----------|------------|------|
-| #11 | Adicionar `totalClasses` no Workshop | — | Alta | 1 |
-| #12 | Regra de 75% de presença — elegibilidade para certificado | #11 | Alta | 1 |
-| #13 | Página HTML imprimível do certificado | #12 | Alta | 1 |
-| #14 | UX/UI — estilização global das páginas | — | Média | 1 |
-| #15 | Deploy | — | Média | 2 |
+| #27 | Adicionar `totalClasses` no Workshop | — | Alta | 1 |
+| #28 | Regra de 75% de presença — elegibilidade para certificado | #27 | Alta | 1 |
+| #29 | Página HTML imprimível do certificado | #28 | Alta | 1 |
+| #30 | UX/UI — estilização global das páginas | — | Média | 1 |
+| #31 | Deploy | — | Média | 2 |
 
 **Mudanças de regra de negócio planejadas:**
 
@@ -31,7 +31,7 @@ Alinhado com o professor após o Sprint Review 1.
 - O certificado ganhará uma **página HTML pública e imprimível**
   (`/certificates/[id]/print`), sem autenticação, com link enviável diretamente ao
   aluno — a entidade `Certificate` continua persistida normalmente. Detalhamento da
-  rota acompanha a issue #13.
+  rota acompanha a issue #29.
 
 ---
 

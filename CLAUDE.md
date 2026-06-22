@@ -665,11 +665,11 @@ Alinhado com o professor na reunião de revisão do Sprint 1.
 
 | # | Issue | Depende de | Prioridade | Fase |
 |---|-------|-----------|------------|------|
-| #11 | Adicionar `totalClasses` no Workshop | — | 🔴 Alta | 1 |
-| #12 | Regra de 75% de presença — elegibilidade para certificado | #11 | 🔴 Alta | 1 |
-| #13 | Página HTML imprimível do certificado | #12 | 🔴 Alta | 1 |
-| #14 | UX/UI — estilização global das páginas | — | 🟡 Média | 1 |
-| #15 | Deploy | — | 🟡 Média | 2 |
+| #27 | Adicionar `totalClasses` no Workshop | — | 🔴 Alta | 1 |
+| #28 | Regra de 75% de presença — elegibilidade para certificado | #27 | 🔴 Alta | 1 |
+| #29 | Página HTML imprimível do certificado | #28 | 🔴 Alta | 1 |
+| #30 | UX/UI — estilização global das páginas | — | 🟡 Média | 1 |
+| #31 | Deploy | — | 🟡 Média | 2 |
 
 ### Diferenciais (não obrigatórios)
 
@@ -680,7 +680,7 @@ Alinhado com o professor na reunião de revisão do Sprint 1.
 
 ### Questões em aberto
 
-- Número do certificado (UUID) — avaliar com o professor se deve migrar para sequência legível antes da página de impressão (issue #13)
+- Número do certificado (UUID) — avaliar com o professor se deve migrar para sequência legível antes da página de impressão (issue #29)
 
 ---
 
