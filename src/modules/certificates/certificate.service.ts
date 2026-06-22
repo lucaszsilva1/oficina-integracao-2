@@ -8,6 +8,7 @@ import {
   deleteCertificate as deleteCertificateInDb,
 } from './certificate.repository'
 import { prisma } from '@/lib/prisma'
+import { isEligibleForCertificate } from './certificate.eligibility'
 import type { PresenceWithCertificate } from './certificate.types'
 
 type Actor = { id: string; role: 'PROFESSOR' | 'TUTOR' | 'ADMIN' }
@@ -30,6 +31,10 @@ export async function createCertificate(attendanceId: string, actor: Actor) {
 
   if (actor.role === 'PROFESSOR' && attendance.workshop.professorId !== actor.id) {
     throw new ForbiddenError('Você não tem permissão para emitir certificados nesta oficina')
+  }
+
+  if (!isEligibleForCertificate(attendance.presentCount, attendance.workshop.totalClasses)) {
+    throw new ConflictError('Aluno não atingiu 75% de presença para emitir certificado')
   }
 
   const number = crypto.randomUUID()

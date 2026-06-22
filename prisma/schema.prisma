@@ -75,11 +75,12 @@ model Student {
 }
 
 model Attendance {
-  id         String           @id @default(cuid())
-  workshopId String
-  studentId  String
-  status     AttendanceStatus
-  createdAt  DateTime         @default(now())
+  id           String           @id @default(cuid())
+  workshopId   String
+  studentId    String
+  status       AttendanceStatus
+  presentCount Int              @default(0)
+  createdAt    DateTime         @default(now())
 
   workshop    Workshop     @relation(fields: [workshopId], references: [id], onDelete: Cascade)
   student     Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)

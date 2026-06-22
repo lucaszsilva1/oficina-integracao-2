@@ -9,6 +9,12 @@ import type { AttendanceStatus, AttendanceWithStudent } from './attendance.types
 
 type Actor = { id: string; role: 'PROFESSOR' | 'TUTOR' | 'ADMIN' }
 
+// Ponte status→presentCount enquanto não há UI de contagem por aula (Sprint 2):
+// PRESENT registra frequência cheia (elegível ao certificado), ABSENT zera.
+function presentCountFor(status: AttendanceStatus, totalClasses: number): number {
+  return status === 'PRESENT' ? totalClasses : 0
+}
+
 export async function listAttendances(workshopId: string): Promise<AttendanceWithStudent[]> {
   const workshop = await findWorkshopWithAttendances(workshopId)
   if (!workshop) throw new NotFoundError('Oficina')
@@ -27,7 +33,12 @@ export async function saveAttendances(
     throw new ForbiddenError('Você não tem permissão para registrar presença nesta oficina')
   }
 
-  await upsertAttendances(workshopId, items)
+  const enriched = items.map((item) => ({
+    ...item,
+    presentCount: presentCountFor(item.status, workshop.totalClasses),
+  }))
+
+  await upsertAttendances(workshopId, enriched)
 }
 
 export async function updateAttendance(
@@ -42,5 +53,6 @@ export async function updateAttendance(
     throw new ForbiddenError('Você não tem permissão para editar esta presença')
   }
 
-  await updateAttendanceStatus(attendanceId, status)
+  const presentCount = presentCountFor(status, attendance.workshop.totalClasses)
+  await updateAttendanceStatus(attendanceId, status, presentCount)
 }
