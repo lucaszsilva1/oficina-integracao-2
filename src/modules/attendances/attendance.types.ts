@@ -11,6 +11,7 @@ export type AttendanceWithStudent = {
   workshopId: string
   studentId: string
   status: AttendanceStatus
+  presentCount: number
   createdAt: Date
   student: {
     id: string

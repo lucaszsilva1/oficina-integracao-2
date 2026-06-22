@@ -15,14 +15,14 @@ export async function findWorkshopWithAttendances(workshopId: string) {
 
 export async function upsertAttendances(
   workshopId: string,
-  items: { studentId: string; status: AttendanceStatus }[],
+  items: { studentId: string; status: AttendanceStatus; presentCount: number }[],
 ): Promise<void> {
   await prisma.$transaction(
-    items.map(({ studentId, status }) =>
+    items.map(({ studentId, status, presentCount }) =>
       prisma.attendance.upsert({
         where: { workshopId_studentId: { workshopId, studentId } },
-        create: { workshopId, studentId, status },
-        update: { status },
+        create: { workshopId, studentId, status, presentCount },
+        update: { status, presentCount },
       }),
     ),
   )
@@ -35,9 +35,13 @@ export async function findAttendanceById(attendanceId: string) {
   })
 }
 
-export async function updateAttendanceStatus(attendanceId: string, status: AttendanceStatus) {
+export async function updateAttendanceStatus(
+  attendanceId: string,
+  status: AttendanceStatus,
+  presentCount: number,
+) {
   return prisma.attendance.update({
     where: { id: attendanceId },
-    data: { status },
+    data: { status, presentCount },
   })
 }

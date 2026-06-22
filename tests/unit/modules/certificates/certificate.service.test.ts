@@ -52,9 +52,10 @@ function makeAttendanceWithCertificate(overrides: Record<string, unknown> = {}) 
     workshopId: 'workshop-1',
     studentId: 'student-1',
     status: 'PRESENT',
+    presentCount: 1,
     createdAt: new Date(),
     certificate: null,
-    workshop: { id: 'workshop-1', professorId: 'prof-1' },
+    workshop: { id: 'workshop-1', professorId: 'prof-1', totalClasses: 1 },
     ...overrides,
   }
 }
@@ -131,6 +132,17 @@ describe('createCertificate', () => {
 
   it('lança ConflictError se presença tem status ABSENT', async () => {
     const attendance = makeAttendanceWithCertificate({ status: 'ABSENT' })
+    mockPrisma.attendance.findUnique.mockResolvedValue(attendance)
+
+    await expect(createCertificate('att-1', professorOwner)).rejects.toThrow(ConflictError)
+    expect(mockPrisma.certificate.create).not.toHaveBeenCalled()
+  })
+
+  it('lança ConflictError se aluno não atingiu 75% de presença', async () => {
+    const attendance = makeAttendanceWithCertificate({
+      presentCount: 5,
+      workshop: { id: 'workshop-1', professorId: 'prof-1', totalClasses: 10 },
+    })
     mockPrisma.attendance.findUnique.mockResolvedValue(attendance)
 
     await expect(createCertificate('att-1', professorOwner)).rejects.toThrow(ConflictError)
