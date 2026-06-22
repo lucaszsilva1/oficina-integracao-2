@@ -62,6 +62,7 @@ const makeWorkshop = (overrides = {}) => ({
   location: 'Lab 1',
   themeId: 'theme-1',
   professorId: 'user-1',
+  totalClasses: 1,
   createdAt: new Date(),
   theme: makeTheme(),
   professor: makeUser(),
@@ -107,7 +108,7 @@ describe('createWorkshop', () => {
     mockPrisma.workshop.create.mockResolvedValue(workshop)
 
     const result = await createWorkshop(
-      { title: 'Oficina de Scratch', date: new Date('2026-06-01'), location: 'Lab 1', themeId: 'theme-1' },
+      { title: 'Oficina de Scratch', date: new Date('2026-06-01'), location: 'Lab 1', themeId: 'theme-1', totalClasses: 1 },
       professorPayload,
     )
 
@@ -119,10 +120,27 @@ describe('createWorkshop', () => {
     )
   })
 
+  it('repassa totalClasses ao repository', async () => {
+    const workshop = makeWorkshop({ totalClasses: 8 })
+    mockPrisma.theme.findUnique.mockResolvedValue(makeTheme())
+    mockPrisma.workshop.create.mockResolvedValue(workshop)
+
+    await createWorkshop(
+      { title: 'Oficina', date: new Date('2026-06-01'), location: 'Lab 1', themeId: 'theme-1', totalClasses: 8 },
+      professorPayload,
+    )
+
+    expect(mockPrisma.workshop.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ totalClasses: 8 }),
+      }),
+    )
+  })
+
   it('lança ValidationError se título está vazio', async () => {
     await expect(
       createWorkshop(
-        { title: '', date: new Date('2026-06-01'), location: 'Lab 1', themeId: 'theme-1' },
+        { title: '', date: new Date('2026-06-01'), location: 'Lab 1', themeId: 'theme-1', totalClasses: 1 },
         professorPayload,
       ),
     ).rejects.toThrow(ValidationError)
@@ -131,7 +149,7 @@ describe('createWorkshop', () => {
   it('lança ValidationError se data está ausente', async () => {
     await expect(
       createWorkshop(
-        { title: 'Oficina', date: null as unknown as Date, location: 'Lab 1', themeId: 'theme-1' },
+        { title: 'Oficina', date: null as unknown as Date, location: 'Lab 1', themeId: 'theme-1', totalClasses: 1 },
         professorPayload,
       ),
     ).rejects.toThrow(ValidationError)
@@ -142,7 +160,7 @@ describe('createWorkshop', () => {
 
     await expect(
       createWorkshop(
-        { title: 'Oficina', date: new Date('2026-06-01'), location: 'Lab 1', themeId: 'theme-inexistente' },
+        { title: 'Oficina', date: new Date('2026-06-01'), location: 'Lab 1', themeId: 'theme-inexistente', totalClasses: 1 },
         professorPayload,
       ),
     ).rejects.toThrow(NotFoundError)
