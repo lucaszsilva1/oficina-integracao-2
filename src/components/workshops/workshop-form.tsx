@@ -29,6 +29,7 @@ export function WorkshopForm({ themes, workshop, canDelete }: Props) {
       date: formData.get('date') as string,
       location: formData.get('location') as string,
       themeId: formData.get('themeId') as string,
+      totalClasses: formData.get('totalClasses') as string,
     }
 
     const parsed = createWorkshopSchema.safeParse(input)
@@ -135,6 +136,19 @@ export function WorkshopForm({ themes, workshop, canDelete }: Props) {
             </option>
           ))}
         </select>
+      </div>
+      <div>
+        <label htmlFor="totalClasses">Número de aulas *</label>
+        <input
+          id="totalClasses"
+          name="totalClasses"
+          type="number"
+          required
+          min={1}
+          max={10}
+          defaultValue={workshop?.totalClasses ?? 1}
+          disabled={loading}
+        />
       </div>
       {error && <p role="alert">{error}</p>}
       <button type="submit" disabled={loading}>

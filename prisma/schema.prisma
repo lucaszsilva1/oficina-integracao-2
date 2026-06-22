@@ -45,13 +45,14 @@ model Theme {
 }
 
 model Workshop {
-  id          String   @id @default(cuid())
-  title       String
-  date        DateTime
-  location    String
-  themeId     String
-  professorId String
-  createdAt   DateTime @default(now())
+  id           String   @id @default(cuid())
+  title        String
+  date         DateTime
+  location     String
+  themeId      String
+  professorId  String
+  totalClasses Int      @default(1)
+  createdAt    DateTime @default(now())
 
   theme       Theme        @relation(fields: [themeId], references: [id])
   professor   User         @relation("ProfessorWorkshops", fields: [professorId], references: [id])

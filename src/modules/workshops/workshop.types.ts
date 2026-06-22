@@ -18,6 +18,7 @@ export type Workshop = {
   location: string
   themeId: string
   professorId: string
+  totalClasses: number
   createdAt: Date
   theme?: { id: string; name: string; slug: string }
   professor?: WorkshopUser
