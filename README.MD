@@ -7,6 +7,34 @@ Lógica e Programação) da UTFPR — Campus Cornélio Procópio.
 
 ---
 
+## Status do Projeto
+
+**Sprint 1 — Concluído ✅** (issues #1 a #10)
+
+**Sprint 2 — Em andamento 🚧**
+
+Alinhado com o professor após o Sprint Review 1.
+
+| # | Issue | Depende de | Prioridade | Fase |
+|---|-------|-----------|------------|------|
+| #11 | Adicionar `totalClasses` no Workshop | — | Alta | 1 |
+| #12 | Regra de 75% de presença — elegibilidade para certificado | #11 | Alta | 1 |
+| #13 | Página HTML imprimível do certificado | #12 | Alta | 1 |
+| #14 | UX/UI — estilização global das páginas | — | Média | 1 |
+| #15 | Deploy | — | Média | 2 |
+
+**Mudanças de regra de negócio planejadas:**
+
+- `Workshop` ganhará o campo `totalClasses Int @default(1)` (até 10 aulas por oficina)
+- Certificado só poderá ser emitido para aluno com **75% ou mais de presença**
+  (`count(PRESENT) / totalClasses >= 0.75`)
+- O certificado ganhará uma **página HTML pública e imprimível**
+  (`/certificates/[id]/print`), sem autenticação, com link enviável diretamente ao
+  aluno — a entidade `Certificate` continua persistida normalmente. Detalhamento da
+  rota acompanha a issue #13.
+
+---
+
 ## Stack
 
 | Camada         | Tecnologia                      |
