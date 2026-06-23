@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { getApiErrorMessage } from '@/lib/api-error'
 
 export function LoginForm() {
   const router = useRouter()
@@ -30,7 +31,7 @@ export function LoginForm() {
       }
 
       const data = await response.json()
-      setError(data.error ?? 'Erro ao fazer login')
+      setError(getApiErrorMessage(data.error, 'Erro ao fazer login'))
     } catch {
       setError('Erro ao conectar com o servidor')
     } finally {

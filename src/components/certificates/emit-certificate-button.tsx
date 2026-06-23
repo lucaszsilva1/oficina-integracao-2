@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
+import { getApiErrorMessage } from '@/lib/api-error'
 
 type Props = {
   workshopId: string
@@ -23,7 +24,7 @@ export function EmitCertificateButton({ workshopId, attendanceId }: Props) {
       })
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        setError(data.error ?? 'Erro ao emitir certificado')
+        setError(getApiErrorMessage(data.error, 'Erro ao emitir certificado'))
         return
       }
       router.refresh()

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createThemeSchema } from '@/modules/themes/theme.schema'
 import type { Theme } from '@/modules/themes/theme.types'
+import { getApiErrorMessage } from '@/lib/api-error'
 
 type Props = {
   theme?: Theme
@@ -48,7 +49,7 @@ export function ThemeForm({ theme }: Props) {
       }
 
       const data = await response.json()
-      setError(data.error ?? 'Erro ao salvar tema')
+      setError(getApiErrorMessage(data.error, 'Erro ao salvar tema'))
     } catch {
       setError('Erro ao conectar com o servidor')
     } finally {

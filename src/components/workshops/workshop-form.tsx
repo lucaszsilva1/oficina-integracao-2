@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createWorkshopSchema } from '@/modules/workshops/workshop.schema'
 import type { Workshop } from '@/modules/workshops/workshop.types'
+import { getApiErrorMessage } from '@/lib/api-error'
 
 type ThemeOption = { id: string; name: string }
 
@@ -55,7 +56,7 @@ export function WorkshopForm({ themes, workshop, canDelete }: Props) {
       }
 
       const data = await response.json()
-      setError(data.error ?? 'Erro ao salvar oficina')
+      setError(getApiErrorMessage(data.error, 'Erro ao salvar oficina'))
     } catch {
       setError('Erro ao conectar com o servidor')
     } finally {
@@ -73,7 +74,7 @@ export function WorkshopForm({ themes, workshop, canDelete }: Props) {
         return
       }
       const data = await response.json()
-      setError(data.error ?? 'Erro ao excluir oficina')
+      setError(getApiErrorMessage(data.error, 'Erro ao excluir oficina'))
     } catch {
       setError('Erro ao conectar com o servidor')
     } finally {
