@@ -5,7 +5,7 @@ export async function findAttendanceWithCertificate(attendanceId: string) {
     where: { id: attendanceId },
     include: {
       certificate: true,
-      workshop: { select: { id: true, professorId: true } },
+      workshop: { select: { id: true, professorId: true, totalClasses: true } },
     },
   })
 }
