@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { StudentSelector } from './student-selector'
 import type { Student } from '@/modules/students/student.types'
 import type { AttendanceWithStudent } from '@/modules/attendances/attendance.types'
+import { getApiErrorMessage } from '@/lib/api-error'
 
 type AttendanceStatus = 'PRESENT' | 'ABSENT'
 
@@ -75,7 +76,7 @@ export function AttendanceManager({ workshop, initialAttendances }: Props) {
       })
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        setError(data.error ?? 'Erro ao salvar presenças')
+        setError(getApiErrorMessage(data.error, 'Erro ao salvar presenças'))
         return
       }
       router.refresh()

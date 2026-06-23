@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createStudentSchema } from '@/modules/students/student.schema'
 import type { Student } from '@/modules/students/student.types'
+import { getApiErrorMessage } from '@/lib/api-error'
 
 type Props = {
   student?: Student
@@ -50,7 +51,7 @@ export function StudentForm({ student }: Props) {
       }
 
       const data = await response.json()
-      setError(data.error ?? 'Erro ao salvar aluno')
+      setError(getApiErrorMessage(data.error, 'Erro ao salvar aluno'))
     } catch {
       setError('Erro ao conectar com o servidor')
     } finally {
@@ -68,7 +69,7 @@ export function StudentForm({ student }: Props) {
         return
       }
       const data = await response.json()
-      setError(data.error ?? 'Erro ao excluir aluno')
+      setError(getApiErrorMessage(data.error, 'Erro ao excluir aluno'))
     } catch {
       setError('Erro ao conectar com o servidor')
     } finally {
