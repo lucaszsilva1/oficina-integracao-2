@@ -239,6 +239,25 @@ npx prisma db seed           # popula banco com dados de dev
 npx prisma studio            # interface visual
 ```
 
+### Contas de teste (desenvolvimento)
+
+O `npx prisma db seed` cria três usuários para testar o login localmente.
+Todos usam a **mesma senha: `senha123`**.
+
+| Papel       | Email                | Senha      |
+| ----------- | -------------------- | ---------- |
+| ADMIN       | `admin@ellp.dev`     | `senha123` |
+| PROFESSOR   | `professor@ellp.dev` | `senha123` |
+| TUTOR       | `tutor@ellp.dev`     | `senha123` |
+
+Para testar o fluxo completo de certificado, use **`professor@ellp.dev`** — ele é o
+dono da oficina de exemplo criada no seed, então pode registrar presença e emitir
+certificados.
+
+> ⚠️ Credenciais **apenas para desenvolvimento local**. Nunca use essa senha em
+> ambientes reais. Se o login falhar, provavelmente o banco ainda não foi populado —
+> rode `npx prisma db seed`.
+
 ---
 
 ## Testes
