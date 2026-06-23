@@ -25,6 +25,28 @@ export async function findCertificateById(certificateId: string) {
   return prisma.certificate.findUnique({ where: { id: certificateId } })
 }
 
+export async function findCertificateForPrint(certificateId: string) {
+  return prisma.certificate.findUnique({
+    where: { id: certificateId },
+    include: {
+      attendance: {
+        include: {
+          student: { select: { name: true } },
+          workshop: {
+            select: {
+              title: true,
+              date: true,
+              totalClasses: true,
+              theme: { select: { name: true } },
+              professor: { select: { name: true } },
+            },
+          },
+        },
+      },
+    },
+  })
+}
+
 export async function createCertificate(data: { attendanceId: string; number: string }) {
   return prisma.certificate.create({ data })
 }

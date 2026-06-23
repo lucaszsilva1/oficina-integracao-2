@@ -8,3 +8,14 @@ export type PresenceWithCertificate = {
   studentName: string
   certificate: { id: string; number: string; issuedAt: Date } | null
 }
+
+export type CertificatePrintData = {
+  number: string
+  issuedAt: Date
+  studentName: string
+  workshopTitle: string
+  themeName: string
+  workshopDate: Date
+  totalClasses: number
+  professorName: string
+}
