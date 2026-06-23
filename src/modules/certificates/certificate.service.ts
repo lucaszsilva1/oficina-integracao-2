@@ -4,12 +4,13 @@ import {
   findAttendanceWithCertificate,
   findCertificatesByWorkshop,
   findCertificateById,
+  findCertificateForPrint,
   createCertificate as createCertificateInDb,
   deleteCertificate as deleteCertificateInDb,
 } from './certificate.repository'
 import { prisma } from '@/lib/prisma'
 import { isEligibleForCertificate } from './certificate.eligibility'
-import type { PresenceWithCertificate } from './certificate.types'
+import type { PresenceWithCertificate, CertificatePrintData } from './certificate.types'
 
 type Actor = { id: string; role: 'PROFESSOR' | 'TUTOR' | 'ADMIN' }
 
@@ -51,6 +52,25 @@ export async function listCertificates(workshopId: string): Promise<PresenceWith
     studentName: p.student.name,
     certificate: p.certificate,
   }))
+}
+
+export async function getCertificateForPrint(
+  certificateId: string,
+): Promise<CertificatePrintData> {
+  const cert = await findCertificateForPrint(certificateId)
+  if (!cert) throw new NotFoundError('Certificado')
+
+  const { attendance } = cert
+  return {
+    number: cert.number,
+    issuedAt: cert.issuedAt,
+    studentName: attendance.student.name,
+    workshopTitle: attendance.workshop.title,
+    themeName: attendance.workshop.theme.name,
+    workshopDate: attendance.workshop.date,
+    totalClasses: attendance.workshop.totalClasses,
+    professorName: attendance.workshop.professor.name,
+  }
 }
 
 export async function deleteCertificate(certificateId: string, actor: Actor): Promise<void> {

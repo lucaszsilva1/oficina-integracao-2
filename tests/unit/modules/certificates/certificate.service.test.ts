@@ -4,6 +4,7 @@ import {
   createCertificate,
   listCertificates,
   deleteCertificate,
+  getCertificateForPrint,
 } from '@/modules/certificates/certificate.service'
 import { NotFoundError, ForbiddenError, ConflictError } from '@/lib/errors'
 
@@ -231,5 +232,52 @@ describe('deleteCertificate', () => {
 
     await expect(deleteCertificate('id-inexistente', adminActor)).rejects.toThrow(NotFoundError)
     expect(mockPrisma.certificate.delete).not.toHaveBeenCalled()
+  })
+})
+
+// ─── getCertificateForPrint ───────────────────────────────────────────────────
+
+function makeCertificateForPrint(overrides: Record<string, unknown> = {}) {
+  return {
+    id: 'cert-1',
+    attendanceId: 'att-1',
+    number: 'test-uuid-1234',
+    issuedAt: new Date('2026-06-20T00:00:00Z'),
+    attendance: {
+      student: { name: 'Ana Silva' },
+      workshop: {
+        title: 'Introdução ao Scratch',
+        date: new Date('2026-06-01T00:00:00Z'),
+        totalClasses: 8,
+        theme: { name: 'Scratch' },
+        professor: { name: 'Prof. João' },
+      },
+    },
+    ...overrides,
+  }
+}
+
+describe('getCertificateForPrint', () => {
+  it('retorna os dados completos do certificado para impressão', async () => {
+    mockPrisma.certificate.findUnique.mockResolvedValue(makeCertificateForPrint())
+
+    const result = await getCertificateForPrint('cert-1')
+
+    expect(result).toEqual({
+      number: 'test-uuid-1234',
+      issuedAt: new Date('2026-06-20T00:00:00Z'),
+      studentName: 'Ana Silva',
+      workshopTitle: 'Introdução ao Scratch',
+      themeName: 'Scratch',
+      workshopDate: new Date('2026-06-01T00:00:00Z'),
+      totalClasses: 8,
+      professorName: 'Prof. João',
+    })
+  })
+
+  it('lança NotFoundError se certificado não existe', async () => {
+    mockPrisma.certificate.findUnique.mockResolvedValue(null)
+
+    await expect(getCertificateForPrint('id-inexistente')).rejects.toThrow(NotFoundError)
   })
 })

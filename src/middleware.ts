@@ -2,10 +2,21 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const PUBLIC_PATHS = ['/login', '/api/auth/login', '/api/auth/logout']
 
+// página pública de impressão do certificado: /certificates/[id]/print
+// (exceção consciente ao padrão de autorização — CLAUDE.md §10)
+const PUBLIC_PATH_PATTERNS = [/^\/certificates\/[^/]+\/print$/]
+
+function isPublicPath(pathname: string): boolean {
+  return (
+    PUBLIC_PATHS.includes(pathname) ||
+    PUBLIC_PATH_PATTERNS.some((pattern) => pattern.test(pathname))
+  )
+}
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  if (PUBLIC_PATHS.includes(pathname)) {
+  if (isPublicPath(pathname)) {
     return NextResponse.next()
   }
 
