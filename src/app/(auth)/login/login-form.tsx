@@ -26,7 +26,7 @@ export function LoginForm() {
       })
 
       if (response.ok) {
-        router.push('/workshops')
+        router.push('/')
         return
       }
 

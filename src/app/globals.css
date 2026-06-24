@@ -258,6 +258,39 @@ p {
   padding: 1.25rem;
 }
 
+/* Grid of module cards on the home landing page */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.card--link {
+  display: block;
+  text-decoration: none;
+  color: var(--fg);
+  transition:
+    transform 0.05s ease,
+    box-shadow 0.05s ease;
+}
+
+.card--link:hover {
+  background: var(--bg);
+  color: var(--fg);
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-hover);
+}
+
+.card--link h2 {
+  margin-bottom: 0.4rem;
+}
+
+.card--link p {
+  margin: 0;
+  color: var(--muted);
+}
+
 /* ---- Feedback ---- */
 
 .error,
