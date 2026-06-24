@@ -1,0 +1,377 @@
+/*
+ * Estilo brutalista monocromático — ELLP Controle de Oficinas (issue #14).
+ * Só preto/branco/cinza, bordas duras 2px sem raio, sombra dura 4px, Inter pesada.
+ * Mudança puramente de apresentação. Vocabulário de classes consumido pelas páginas
+ * e componentes: .page, .page-header, .btn, .table, .field, .stack, .card, .error, .empty, .nav.
+ */
+
+:root {
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #666666;
+  --surface: #f2f2f2;
+  --border: #111111;
+  --border-width: 2px;
+  --shadow: 4px 4px 0 var(--border);
+  --shadow-hover: 6px 6px 0 var(--border);
+  --space: 1rem;
+  --radius: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  margin: 0 0 0.75rem;
+}
+
+h1 {
+  font-size: 2rem;
+}
+h2 {
+  font-size: 1.5rem;
+}
+h3 {
+  font-size: 1.15rem;
+}
+
+a {
+  color: var(--fg);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 600;
+}
+
+a:hover {
+  background: var(--fg);
+  color: var(--bg);
+  text-decoration: none;
+}
+
+p {
+  margin: 0 0 0.75rem;
+}
+
+/* ---- Layout containers ---- */
+
+.page-shell {
+  display: block;
+}
+
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.page-header h1,
+.page-header h2 {
+  margin: 0;
+}
+
+/* ---- Buttons ---- */
+
+.btn {
+  display: inline-block;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 0.55rem 1rem;
+  background: var(--bg);
+  color: var(--fg);
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition:
+    transform 0.05s ease,
+    box-shadow 0.05s ease,
+    background 0.05s ease,
+    color 0.05s ease;
+}
+
+.btn:hover {
+  background: var(--fg);
+  color: var(--bg);
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-hover);
+  text-decoration: none;
+}
+
+.btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--border);
+}
+
+.btn:focus-visible {
+  outline: var(--border-width) solid var(--border);
+  outline-offset: 2px;
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: var(--shadow);
+  transform: none;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* Small variant for inline table actions */
+.btn--sm {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.85rem;
+  box-shadow: 2px 2px 0 var(--border);
+}
+
+.btn--sm:hover {
+  box-shadow: 3px 3px 0 var(--border);
+}
+
+/* ---- Tables ---- */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border: var(--border-width) solid var(--border);
+}
+
+.table th,
+.table td {
+  border: var(--border-width) solid var(--border);
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.table thead th {
+  background: var(--fg);
+  color: var(--bg);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+
+.table tbody tr:nth-child(even) {
+  background: var(--surface);
+}
+
+/* Group of inline actions inside a table cell */
+.row-actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+/* ---- Forms ---- */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.field label {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.field input,
+.field select,
+.field textarea,
+.input {
+  font: inherit;
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  background: var(--bg);
+  color: var(--fg);
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius);
+}
+
+.field textarea {
+  min-height: 5rem;
+  resize: vertical;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus,
+.input:focus {
+  outline: var(--border-width) solid var(--border);
+  outline-offset: 2px;
+}
+
+.field input:disabled,
+.field select:disabled,
+.field textarea:disabled {
+  background: var(--surface);
+  cursor: not-allowed;
+}
+
+/* Standalone search/input not wrapped in .field */
+.input {
+  max-width: 22rem;
+}
+
+/* ---- Card (login etc.) ---- */
+
+.card {
+  background: var(--bg);
+  border: var(--border-width) solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 2rem;
+}
+
+.center-screen {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+}
+
+/* Grid of module cards on the home landing page */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.card--link {
+  display: block;
+  text-decoration: none;
+  color: var(--fg);
+  transition:
+    transform 0.05s ease,
+    box-shadow 0.05s ease;
+}
+
+.card--link:hover {
+  background: var(--bg);
+  color: var(--fg);
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-hover);
+}
+
+.card--link h2 {
+  margin-bottom: 0.4rem;
+}
+
+.card--link p {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* ---- Feedback ---- */
+
+.error,
+[role='alert'] {
+  border: var(--border-width) solid var(--border);
+  background: var(--surface);
+  color: var(--fg);
+  font-weight: 700;
+  padding: 0.6rem 0.8rem;
+}
+
+/* inline error next to a button (no block box) */
+.error--inline {
+  display: inline-block;
+  margin-left: 0.5rem;
+  border: none;
+  background: transparent;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.empty {
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* ---- Navbar ---- */
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  padding: 0.85rem 1.25rem;
+  border-bottom: var(--border-width) solid var(--border);
+  background: var(--bg);
+}
+
+.nav__brand {
+  font-weight: 800;
+  text-decoration: none;
+  color: var(--fg);
+}
+
+.nav__brand:hover {
+  background: transparent;
+  color: var(--fg);
+}
+
+.nav__link {
+  text-decoration: none;
+  font-weight: 700;
+  padding: 0.3rem 0.5rem;
+  border: var(--border-width) solid transparent;
+}
+
+.nav__link:hover {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.nav__link--active {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--border);
+}
+
+.nav__user {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.nav__logout {
+  margin: 0;
+}

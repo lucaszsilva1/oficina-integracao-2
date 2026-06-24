@@ -29,32 +29,38 @@ export function StudentSelector({ selectedIds, onSelect }: Props) {
   }
 
   return (
-    <div>
+    <div className="stack">
       <input
         type="search"
+        className="input"
         placeholder="Buscar aluno por nome..."
         value={search}
         onChange={(e) => handleSearch(e.target.value)}
         disabled={isPending}
       />
       {results.length > 0 && (
-        <ul>
-          {results.map((student) => (
-            <li key={student.id}>
-              <span>
-                {student.name}
-                {student.school ? ` — ${student.school}` : ''}
-              </span>
-              <button
-                type="button"
-                onClick={() => onSelect(student)}
-                disabled={selectedIds.has(student.id)}
-              >
-                {selectedIds.has(student.id) ? 'Adicionado' : 'Adicionar'}
-              </button>
-            </li>
-          ))}
-        </ul>
+        <table className="table">
+          <tbody>
+            {results.map((student) => (
+              <tr key={student.id}>
+                <td>
+                  {student.name}
+                  {student.school ? ` — ${student.school}` : ''}
+                </td>
+                <td style={{ width: '1%', whiteSpace: 'nowrap' }}>
+                  <button
+                    type="button"
+                    className="btn btn--sm"
+                    onClick={() => onSelect(student)}
+                    disabled={selectedIds.has(student.id)}
+                  >
+                    {selectedIds.has(student.id) ? 'Adicionado' : 'Adicionar'}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   )

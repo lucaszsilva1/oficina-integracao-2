@@ -2,9 +2,11 @@ import { StudentForm } from '@/components/students/student-form'
 
 export default function NewStudentPage() {
   return (
-    <main>
-      <h1>Cadastrar Aluno</h1>
+    <div className="page">
+      <div className="page-header">
+        <h1>Cadastrar Aluno</h1>
+      </div>
       <StudentForm />
-    </main>
+    </div>
   )
 }

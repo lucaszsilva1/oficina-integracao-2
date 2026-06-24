@@ -78,8 +78,8 @@ export function StudentForm({ student }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
+    <form onSubmit={handleSubmit} className="stack">
+      <div className="field">
         <label htmlFor="name">Nome *</label>
         <input
           id="name"
@@ -90,7 +90,7 @@ export function StudentForm({ student }: Props) {
           disabled={loading}
         />
       </div>
-      <div>
+      <div className="field">
         <label htmlFor="school">Escola</label>
         <input
           id="school"
@@ -100,7 +100,7 @@ export function StudentForm({ student }: Props) {
           disabled={loading}
         />
       </div>
-      <div>
+      <div className="field">
         <label htmlFor="age">Idade</label>
         <input
           id="age"
@@ -112,14 +112,16 @@ export function StudentForm({ student }: Props) {
         />
       </div>
       {error && <p role="alert">{error}</p>}
-      <button type="submit" disabled={loading}>
-        {loading ? 'Salvando...' : isEditing ? 'Salvar alterações' : 'Cadastrar aluno'}
-      </button>
-      {isEditing && (
-        <button type="button" onClick={handleDelete} disabled={loading}>
-          Excluir aluno
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+        <button type="submit" className="btn" disabled={loading}>
+          {loading ? 'Salvando...' : isEditing ? 'Salvar alterações' : 'Cadastrar aluno'}
         </button>
-      )}
+        {isEditing && (
+          <button type="button" className="btn" onClick={handleDelete} disabled={loading}>
+            Excluir aluno
+          </button>
+        )}
+      </div>
     </form>
   )
 }

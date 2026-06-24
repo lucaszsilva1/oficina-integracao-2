@@ -29,13 +29,15 @@ export default async function CertificatesPage({ params }: Props) {
   const presences = await listCertificates(params.id)
 
   return (
-    <main>
-      <h2>Certificados — {workshop.title}</h2>
+    <div className="page">
+      <div className="page-header">
+        <h2>Certificados — {workshop.title}</h2>
+      </div>
       <CertificateList
         presences={presences}
         workshopId={params.id}
         canEmit={canEmit}
       />
-    </main>
+    </div>
   )
 }

@@ -58,8 +58,8 @@ export function ThemeForm({ theme }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
+    <form onSubmit={handleSubmit} className="stack">
+      <div className="field">
         <label htmlFor="name">Nome *</label>
         <input
           id="name"
@@ -70,7 +70,7 @@ export function ThemeForm({ theme }: Props) {
           disabled={loading}
         />
       </div>
-      <div>
+      <div className="field">
         <label htmlFor="description">Descrição</label>
         <textarea
           id="description"
@@ -80,7 +80,7 @@ export function ThemeForm({ theme }: Props) {
         />
       </div>
       {error && <p role="alert">{error}</p>}
-      <button type="submit" disabled={loading}>
+      <button type="submit" className="btn" disabled={loading}>
         {loading ? 'Salvando...' : isEditing ? 'Salvar alterações' : 'Criar tema'}
       </button>
     </form>

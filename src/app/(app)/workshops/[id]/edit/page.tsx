@@ -25,9 +25,11 @@ export default async function EditWorkshopPage({ params }: Props) {
     (payload.role === 'PROFESSOR' && workshop.professorId === payload.id)
 
   return (
-    <main>
-      <h1>Editar Oficina</h1>
+    <div className="page">
+      <div className="page-header">
+        <h1>Editar Oficina</h1>
+      </div>
       <WorkshopForm themes={themes} workshop={workshop} canDelete={canDelete} />
-    </main>
+    </div>
   )
 }

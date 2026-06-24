@@ -28,11 +28,11 @@ export default async function AttendancePage({ params }: Props) {
   if (!canSave) notFound()
 
   return (
-    <main>
+    <div className="page">
       <AttendanceManager
         workshop={{ id: workshop.id, title: workshop.title }}
         initialAttendances={workshop.attendances as AttendanceWithStudent[]}
       />
-    </main>
+    </div>
   )
 }

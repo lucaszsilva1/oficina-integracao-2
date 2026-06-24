@@ -11,9 +11,11 @@ export default async function EditStudentPage({ params }: Props) {
   if (!student) notFound()
 
   return (
-    <main>
-      <h1>Editar Aluno</h1>
+    <div className="page">
+      <div className="page-header">
+        <h1>Editar Aluno</h1>
+      </div>
       <StudentForm student={student} />
-    </main>
+    </div>
   )
 }
