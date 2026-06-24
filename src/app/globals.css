@@ -333,7 +333,6 @@ p {
   font-weight: 800;
   text-decoration: none;
   color: var(--fg);
-  margin-right: auto;
 }
 
 .nav__brand:hover {
@@ -351,6 +350,19 @@ p {
 .nav__link:hover {
   background: var(--fg);
   color: var(--bg);
+}
+
+.nav__link--active {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--border);
+}
+
+.nav__user {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .nav__logout {
