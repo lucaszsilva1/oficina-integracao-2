@@ -17,13 +17,15 @@ async function getUserPayload() {
 
 export default async function WorkshopsPage() {
   const [workshops, payload] = await Promise.all([listWorkshops(), getUserPayload()])
-  const canManage = payload?.role === 'PROFESSOR' || payload?.role === 'ADMIN'
+  const role = payload?.role
+  const userId = payload?.id
+  const showActions = role === 'ADMIN' || role === 'PROFESSOR' || role === 'TUTOR'
 
   return (
     <div className="page">
       <div className="page-header">
         <h1>Oficinas</h1>
-        {payload?.role === 'PROFESSOR' && (
+        {role === 'PROFESSOR' && (
           <Link href="/workshops/new" className="btn">
             Nova Oficina
           </Link>
@@ -40,26 +42,52 @@ export default async function WorkshopsPage() {
               <th>Local</th>
               <th>Tema</th>
               <th>Professor</th>
-              {canManage && <th></th>}
+              {showActions && <th>Ações</th>}
             </tr>
           </thead>
           <tbody>
-            {(workshops as Workshop[]).map((workshop) => (
-              <tr key={workshop.id}>
-                <td>{workshop.title}</td>
-                <td>{new Date(workshop.date).toLocaleDateString('pt-BR')}</td>
-                <td>{workshop.location}</td>
-                <td>{workshop.theme ? workshop.theme.name : '—'}</td>
-                <td>{workshop.professor ? workshop.professor.name : '—'}</td>
-                {canManage && (
-                  <td>
-                    <Link href={`/workshops/${workshop.id}/edit`} className="btn btn--sm">
-                      Editar
-                    </Link>
-                  </td>
-                )}
-              </tr>
-            ))}
+            {(workshops as Workshop[]).map((workshop) => {
+              const isOwner = role === 'PROFESSOR' && workshop.professorId === userId
+              const canEdit = role === 'ADMIN' || role === 'PROFESSOR'
+              const canAttend = role === 'ADMIN' || role === 'TUTOR' || isOwner
+              const canCert = role === 'ADMIN' || isOwner
+              return (
+                <tr key={workshop.id}>
+                  <td>{workshop.title}</td>
+                  <td>{new Date(workshop.date).toLocaleDateString('pt-BR')}</td>
+                  <td>{workshop.location}</td>
+                  <td>{workshop.theme ? workshop.theme.name : '—'}</td>
+                  <td>{workshop.professor ? workshop.professor.name : '—'}</td>
+                  {showActions && (
+                    <td>
+                      <div className="row-actions">
+                        {canEdit && (
+                          <Link href={`/workshops/${workshop.id}/edit`} className="btn btn--sm">
+                            Editar
+                          </Link>
+                        )}
+                        {canAttend && (
+                          <Link
+                            href={`/workshops/${workshop.id}/attendance`}
+                            className="btn btn--sm"
+                          >
+                            Presença
+                          </Link>
+                        )}
+                        {canCert && (
+                          <Link
+                            href={`/workshops/${workshop.id}/certificates`}
+                            className="btn btn--sm"
+                          >
+                            Certificados
+                          </Link>
+                        )}
+                      </div>
+                    </td>
+                  )}
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       )}

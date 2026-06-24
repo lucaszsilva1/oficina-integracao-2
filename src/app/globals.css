@@ -185,6 +185,13 @@ p {
   background: var(--surface);
 }
 
+/* Group of inline actions inside a table cell */
+.row-actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
 /* ---- Forms ---- */
 
 .stack {
