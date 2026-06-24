@@ -7,9 +7,11 @@ export default async function NewWorkshopPage() {
   const themes = await listThemes()
 
   return (
-    <main>
-      <h1>Nova Oficina</h1>
+    <div className="page">
+      <div className="page-header">
+        <h1>Nova Oficina</h1>
+      </div>
       <WorkshopForm themes={themes} />
-    </main>
+    </div>
   )
 }

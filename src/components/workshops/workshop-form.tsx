@@ -87,8 +87,8 @@ export function WorkshopForm({ themes, workshop, canDelete }: Props) {
     : ''
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
+    <form onSubmit={handleSubmit} className="stack">
+      <div className="field">
         <label htmlFor="title">Título *</label>
         <input
           id="title"
@@ -99,7 +99,7 @@ export function WorkshopForm({ themes, workshop, canDelete }: Props) {
           disabled={loading}
         />
       </div>
-      <div>
+      <div className="field">
         <label htmlFor="date">Data e hora *</label>
         <input
           id="date"
@@ -110,7 +110,7 @@ export function WorkshopForm({ themes, workshop, canDelete }: Props) {
           disabled={loading}
         />
       </div>
-      <div>
+      <div className="field">
         <label htmlFor="location">Local *</label>
         <input
           id="location"
@@ -121,7 +121,7 @@ export function WorkshopForm({ themes, workshop, canDelete }: Props) {
           disabled={loading}
         />
       </div>
-      <div>
+      <div className="field">
         <label htmlFor="themeId">Tema *</label>
         <select
           id="themeId"
@@ -138,7 +138,7 @@ export function WorkshopForm({ themes, workshop, canDelete }: Props) {
           ))}
         </select>
       </div>
-      <div>
+      <div className="field">
         <label htmlFor="totalClasses">Número de aulas *</label>
         <input
           id="totalClasses"
@@ -152,14 +152,16 @@ export function WorkshopForm({ themes, workshop, canDelete }: Props) {
         />
       </div>
       {error && <p role="alert">{error}</p>}
-      <button type="submit" disabled={loading}>
-        {loading ? 'Salvando...' : isEditing ? 'Salvar alterações' : 'Criar oficina'}
-      </button>
-      {isEditing && canDelete && (
-        <button type="button" onClick={handleDelete} disabled={loading}>
-          Excluir oficina
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+        <button type="submit" className="btn" disabled={loading}>
+          {loading ? 'Salvando...' : isEditing ? 'Salvar alterações' : 'Criar oficina'}
         </button>
-      )}
+        {isEditing && canDelete && (
+          <button type="button" className="btn" onClick={handleDelete} disabled={loading}>
+            Excluir oficina
+          </button>
+        )}
+      </div>
     </form>
   )
 }

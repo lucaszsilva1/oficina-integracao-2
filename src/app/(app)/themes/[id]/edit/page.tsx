@@ -11,9 +11,11 @@ export default async function EditThemePage({ params }: Props) {
   if (!theme) notFound()
 
   return (
-    <main>
-      <h1>Editar Tema</h1>
+    <div className="page">
+      <div className="page-header">
+        <h1>Editar Tema</h1>
+      </div>
       <ThemeForm theme={theme} />
-    </main>
+    </div>
   )
 }
