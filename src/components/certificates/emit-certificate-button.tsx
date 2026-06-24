@@ -33,10 +33,14 @@ export function EmitCertificateButton({ workshopId, attendanceId }: Props) {
 
   return (
     <span>
-      <button type="button" onClick={handleEmit} disabled={isPending}>
+      <button type="button" className="btn btn--sm" onClick={handleEmit} disabled={isPending}>
         {isPending ? 'Emitindo...' : 'Emitir Certificado'}
       </button>
-      {error && <span style={{ color: 'red', marginLeft: '8px' }}>{error}</span>}
+      {error && (
+        <span role="alert" className="error--inline">
+          {error}
+        </span>
+      )}
     </span>
   )
 }

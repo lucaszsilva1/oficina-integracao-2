@@ -9,11 +9,11 @@ type Props = {
 
 export function CertificateList({ presences, workshopId, canEmit }: Props) {
   if (presences.length === 0) {
-    return <p>Nenhuma presença registrada para esta oficina.</p>
+    return <p className="empty">Nenhuma presença registrada para esta oficina.</p>
   }
 
   return (
-    <table>
+    <table className="table">
       <thead>
         <tr>
           <th>Aluno</th>

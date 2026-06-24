@@ -84,8 +84,10 @@ export function AttendanceManager({ workshop, initialAttendances }: Props) {
   }
 
   return (
-    <div>
-      <h2>Presença — {workshop.title}</h2>
+    <div className="stack">
+      <div className="page-header">
+        <h2>Presença — {workshop.title}</h2>
+      </div>
 
       <section>
         <h3>Adicionar alunos</h3>
@@ -95,9 +97,9 @@ export function AttendanceManager({ workshop, initialAttendances }: Props) {
       <section>
         <h3>Lista de presença</h3>
         {entries.length === 0 ? (
-          <p>Nenhum aluno adicionado.</p>
+          <p className="empty">Nenhum aluno adicionado.</p>
         ) : (
-          <table>
+          <table className="table">
             <thead>
               <tr>
                 <th>Aluno</th>
@@ -117,7 +119,11 @@ export function AttendanceManager({ workshop, initialAttendances }: Props) {
                     />
                   </td>
                   <td>
-                    <button type="button" onClick={() => handleRemove(entry.studentId)}>
+                    <button
+                      type="button"
+                      className="btn btn--sm"
+                      onClick={() => handleRemove(entry.studentId)}
+                    >
                       Remover
                     </button>
                   </td>
@@ -128,11 +134,18 @@ export function AttendanceManager({ workshop, initialAttendances }: Props) {
         )}
       </section>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p role="alert">{error}</p>}
 
-      <button type="button" onClick={handleSubmit} disabled={isPending || entries.length === 0}>
-        {isPending ? 'Salvando...' : 'Salvar Presenças'}
-      </button>
+      <div>
+        <button
+          type="button"
+          className="btn"
+          onClick={handleSubmit}
+          disabled={isPending || entries.length === 0}
+        >
+          {isPending ? 'Salvando...' : 'Salvar Presenças'}
+        </button>
+      </div>
     </div>
   )
 }
