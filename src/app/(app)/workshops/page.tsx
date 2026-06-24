@@ -20,26 +20,49 @@ export default async function WorkshopsPage() {
   const canManage = payload?.role === 'PROFESSOR' || payload?.role === 'ADMIN'
 
   return (
-    <main>
-      <h1>Oficinas</h1>
-      {payload?.role === 'PROFESSOR' && <Link href="/workshops/new">Nova Oficina</Link>}
+    <div className="page">
+      <div className="page-header">
+        <h1>Oficinas</h1>
+        {payload?.role === 'PROFESSOR' && (
+          <Link href="/workshops/new" className="btn">
+            Nova Oficina
+          </Link>
+        )}
+      </div>
       {workshops.length === 0 ? (
-        <p>Nenhuma oficina cadastrada.</p>
+        <p className="empty">Nenhuma oficina cadastrada.</p>
       ) : (
-        <ul>
-          {(workshops as Workshop[]).map((workshop) => (
-            <li key={workshop.id}>
-              <strong>{workshop.title}</strong>
-              <p>
-                {new Date(workshop.date).toLocaleDateString('pt-BR')} — {workshop.location}
-              </p>
-              {workshop.theme && <p>Tema: {workshop.theme.name}</p>}
-              {workshop.professor && <p>Professor: {workshop.professor.name}</p>}
-              {canManage && <Link href={`/workshops/${workshop.id}/edit`}>Editar</Link>}
-            </li>
-          ))}
-        </ul>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Data</th>
+              <th>Local</th>
+              <th>Tema</th>
+              <th>Professor</th>
+              {canManage && <th></th>}
+            </tr>
+          </thead>
+          <tbody>
+            {(workshops as Workshop[]).map((workshop) => (
+              <tr key={workshop.id}>
+                <td>{workshop.title}</td>
+                <td>{new Date(workshop.date).toLocaleDateString('pt-BR')}</td>
+                <td>{workshop.location}</td>
+                <td>{workshop.theme ? workshop.theme.name : '—'}</td>
+                <td>{workshop.professor ? workshop.professor.name : '—'}</td>
+                {canManage && (
+                  <td>
+                    <Link href={`/workshops/${workshop.id}/edit`} className="btn btn--sm">
+                      Editar
+                    </Link>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
-    </main>
+    </div>
   )
 }

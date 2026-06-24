@@ -14,26 +14,46 @@ export default async function StudentsPage({ searchParams }: Props) {
   const students = await listStudents(searchParams.search)
 
   return (
-    <main>
-      <h1>Alunos</h1>
-      <Link href="/students/new">Cadastrar aluno</Link>
-      <Suspense>
-        <StudentSearch />
-      </Suspense>
+    <div className="page">
+      <div className="page-header">
+        <h1>Alunos</h1>
+        <Link href="/students/new" className="btn">
+          Cadastrar aluno
+        </Link>
+      </div>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <Suspense>
+          <StudentSearch />
+        </Suspense>
+      </div>
       {students.length === 0 ? (
-        <p>Nenhum aluno encontrado.</p>
+        <p className="empty">Nenhum aluno encontrado.</p>
       ) : (
-        <ul>
-          {(students as Student[]).map((student) => (
-            <li key={student.id}>
-              <strong>{student.name}</strong>
-              {student.school && <span> — {student.school}</span>}
-              {student.age && <span> ({student.age} anos)</span>}
-              <Link href={`/students/${student.id}/edit`}>Editar</Link>
-            </li>
-          ))}
-        </ul>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Escola</th>
+              <th>Idade</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {(students as Student[]).map((student) => (
+              <tr key={student.id}>
+                <td>{student.name}</td>
+                <td>{student.school || '—'}</td>
+                <td>{student.age ? `${student.age} anos` : '—'}</td>
+                <td>
+                  <Link href={`/students/${student.id}/edit`} className="btn btn--sm">
+                    Editar
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
-    </main>
+    </div>
   )
 }

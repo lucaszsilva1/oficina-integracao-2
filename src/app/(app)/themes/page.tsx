@@ -21,22 +21,43 @@ export default async function ThemesPage() {
   const canManage = role === 'PROFESSOR' || role === 'ADMIN'
 
   return (
-    <main>
-      <h1>Temas de Oficina</h1>
-      {canManage && <Link href="/themes/new">Novo Tema</Link>}
+    <div className="page">
+      <div className="page-header">
+        <h1>Temas de Oficina</h1>
+        {canManage && (
+          <Link href="/themes/new" className="btn">
+            Novo Tema
+          </Link>
+        )}
+      </div>
       {themes.length === 0 ? (
-        <p>Nenhum tema cadastrado.</p>
+        <p className="empty">Nenhum tema cadastrado.</p>
       ) : (
-        <ul>
-          {themes.map((theme: Theme) => (
-            <li key={theme.id}>
-              <strong>{theme.name}</strong>
-              {theme.description && <p>{theme.description}</p>}
-              {canManage && <Link href={`/themes/${theme.id}/edit`}>Editar</Link>}
-            </li>
-          ))}
-        </ul>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Descrição</th>
+              {canManage && <th></th>}
+            </tr>
+          </thead>
+          <tbody>
+            {themes.map((theme: Theme) => (
+              <tr key={theme.id}>
+                <td>{theme.name}</td>
+                <td>{theme.description || '—'}</td>
+                {canManage && (
+                  <td>
+                    <Link href={`/themes/${theme.id}/edit`} className="btn btn--sm">
+                      Editar
+                    </Link>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
-    </main>
+    </div>
   )
 }

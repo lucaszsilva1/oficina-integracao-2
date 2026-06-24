@@ -19,6 +19,7 @@ export function StudentSearch() {
   return (
     <input
       type="search"
+      className="input"
       placeholder="Buscar aluno por nome..."
       defaultValue={searchParams.get('search') ?? ''}
       onChange={(e) => handleSearch(e.target.value)}
