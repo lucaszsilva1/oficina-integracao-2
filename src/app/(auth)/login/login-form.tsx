@@ -26,7 +26,7 @@ export function LoginForm() {
       })
 
       if (response.ok) {
-        router.push('/dashboard')
+        router.push('/workshops')
         return
       }
 
@@ -40,19 +40,24 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="email">Email</label>
-        <input id="email" name="email" type="email" required disabled={loading} />
+    <div className="center-screen">
+      <div className="card" style={{ width: '100%', maxWidth: '24rem' }}>
+        <h1>Entrar</h1>
+        <form onSubmit={handleSubmit} className="stack">
+          <div className="field">
+            <label htmlFor="email">Email</label>
+            <input id="email" name="email" type="email" required disabled={loading} />
+          </div>
+          <div className="field">
+            <label htmlFor="password">Senha</label>
+            <input id="password" name="password" type="password" required disabled={loading} />
+          </div>
+          {error && <p role="alert">{error}</p>}
+          <button type="submit" className="btn" disabled={loading}>
+            {loading ? 'Entrando...' : 'Entrar'}
+          </button>
+        </form>
       </div>
-      <div>
-        <label htmlFor="password">Senha</label>
-        <input id="password" name="password" type="password" required disabled={loading} />
-      </div>
-      {error && <p role="alert">{error}</p>}
-      <button type="submit" disabled={loading}>
-        {loading ? 'Entrando...' : 'Entrar'}
-      </button>
-    </form>
+    </div>
   )
 }
